@@ -24,7 +24,10 @@ export class EventsService {
     return newEvent.save();
   }
 
-  async findAll(filters?: any): Promise<Event[]> {
+  async findAll(filters?: any): Promise<Event[]> {  
+    if (filters?.createdBy && !Types.ObjectId.isValid(filters.createdBy)) {
+      throw new BadRequestException(`Invalid createdBy ID format: ${filters.createdBy}`);
+    }
     return this.eventModel.find(filters || {}).exec();
   }
 
